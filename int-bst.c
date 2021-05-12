@@ -183,7 +183,7 @@ parent = NULL;
 int i = 0;
 void int_bst_print_as_tree(int_bst_node_t * t, FILE * f){
     if(t == NULL){
-        fprintf(f,"error");
+        fprintf(f,".");
         return;
     }else if(i != 0){
        if(parent->left != NULL && parent->right != NULL){
@@ -191,13 +191,17 @@ void int_bst_print_as_tree(int_bst_node_t * t, FILE * f){
            int_bst_node_t*child2 = parent -> right;
            fprintf(f,"%d, %d\n",(child1 ->data), (child2->data));
            parent = t;
+           int_bst_print_as_tree(child1, f);
+           int_bst_print_as_tree(child2, f);
         }else if(parent->right != NULL){
             int_bst_node_t*child3 = parent -> right;
             fprintf(f,"%d\n",(child3->data));
+            int_bst_print_as_tree(child3, f);
             parent = t;
         }else if(parent->left != NULL){
             int_bst_node_t*child4 = parent -> left;
             fprintf(f,"%d\n",(child4->data));
+            int_bst_print_as_tree(child4, f);
             parent = t;
         }else return;
     }else{
