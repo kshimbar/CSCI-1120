@@ -5,10 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "int-bst.c"
-#include "int-bst.h"
-#include "int-bst.c"
 #include "test-helper.h"
-#include "test-int-bst.h"
 
 /*******************************************************************************
  *
