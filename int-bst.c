@@ -147,12 +147,12 @@ void int_bst_remove_all(int_bst_node_t ** t_p){
  */
 void int_bst_print_elements(int_bst_node_t * t, FILE * f, char * fmt){
         if(t->right != NULL){
-            fprintf(f,t->data);
+            fprintf(f,"%d ",t->data);
             t = t->right;
             int_bst_print_elements(t,f,fmt);
         }
         if(t->left != NULL){
-            fprintf(f,t->data);
+            fprintf(f,"%d ",t->data);
             t = t-> left;
             int_bst_print_elements(t,f,fmt);
         }
@@ -163,4 +163,6 @@ void int_bst_print_elements(int_bst_node_t * t, FILE * f, char * fmt){
  * (see sample output for one way to do this -- or you may have
  * a better idea)
  */
-void int_bst_print_as_tree(int_bst_node_t * t, FILE * f);
+void int_bst_print_as_tree(int_bst_node_t * t, FILE * f){
+    fprintf(t,"hello");
+}
