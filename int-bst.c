@@ -179,7 +179,7 @@ void int_bst_print_elements(int_bst_node_t * t, FILE * f, char * fmt){
  * (see sample output for one way to do this -- or you may have
  * a better idea)
  */
-int_bst_node_t*parent = NULL;
+parent = NULL;
 int i = 0;
 void int_bst_print_as_tree(int_bst_node_t * t, FILE * f){
     if(t == NULL){
