@@ -25,7 +25,7 @@ int_bst_node_t * createNode(int n)
     return localNode;
 }
 
-/* 
+/*
  * insert n into *t_p
  * does nothing if n is already in the tree
  * returns true if insertion succeeded (including the case where n is already
@@ -146,13 +146,29 @@ void int_bst_remove_all(int_bst_node_t ** t_p){
  *   one line or each on a separate line or what
  */
 void int_bst_print_elements(int_bst_node_t * t, FILE * f, char * fmt){
-        if(t->right != NULL){
-            fprintf(f,"%d ",t->data);
+        // fprintf(f,"%d ",t->data);
+        // if(t->right != NULL){
+        //     t = t->right;
+        //     int_bst_print_elements(t,f,fmt);
+        // }
+        // if(t->left != NULL){
+
+        //     fprintf(f,"%d ",t->data);
+        //     fprintf(f,"%d, ",t->data);
+
+        //     t = t-> left;
+        //     int_bst_print_elements(t,f,fmt);
+        // }
+        fprintf(f,"%d ",t->data);
+        if(t->right){
             t = t->right;
             int_bst_print_elements(t,f,fmt);
         }
-        if(t->left != NULL){
+        if(t->left){
+
             fprintf(f,"%d ",t->data);
+            fprintf(f,"%d, ",t->data);
+
             t = t-> left;
             int_bst_print_elements(t,f,fmt);
         }
@@ -163,6 +179,31 @@ void int_bst_print_elements(int_bst_node_t * t, FILE * f, char * fmt){
  * (see sample output for one way to do this -- or you may have
  * a better idea)
  */
+int_bst_node_t*parent = NULL;
+int i = 0;
 void int_bst_print_as_tree(int_bst_node_t * t, FILE * f){
-    fprintf(t,"hello");
+    if(t == NULL){
+        fprintf(f,"error");
+        return;
+    }else if(i != 0){
+       if(parent->left != NULL && parent->right != NULL){
+           int_bst_node_t*child1 = parent -> left;
+           int_bst_node_t*child2 = parent -> right;
+           fprintf(f,"%d, %d\n",(child1 ->data), (child2->data));
+           parent = t;
+        }else if(t->right != NULL){
+            int_bst_node_t*child3 = parent -> right;
+            fprintf(f,"%d\n",(child3->data));
+            parent = t;
+        }else if(t->left != NULL){
+            int_bst_node_t*child4 = parent -> left;
+            fprintf(f,"%d\n",(child4->data));
+            parent = t;
+        }else return;
+    }else{
+        parent = t;
+        fprintf(f,"%d ",t->data);
+        i = i + 1;
+    }
+    
 }
