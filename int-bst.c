@@ -92,7 +92,7 @@ bool int_bst_find(int_bst_node_t * t, int n){
  * and otherwise do nothing
  */
 void int_bst_remove(int_bst_node_t ** t_p, int n){
-    int_bst_node_t*parent=NULL;
+    int_bst_node_t*parent;
     int_bst_node_t*node = *t_p;
     while(node != NULL){
         if(n < node->data){
