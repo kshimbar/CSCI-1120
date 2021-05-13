@@ -1,42 +1,41 @@
-CC =gcc
-CFLAGS = -Wall -pedantic -std=c99 -O
-LDLIBS = -lm
-
-#This code is for game of life
 #
-# makefile for game of life programs
+# makefile for binary search tree
 #
-# 'make game-of-life' or 'make game-of-life-random' makes executables
+# 'make test-int-bst' makes the executable 
+# (so does 'make main')
 #
+# 'make OPT=<opt> test-int-bst makes the executable
+#   with a non-default optimization level <opt> 
+#   (possible values are -g, -O0, etc.)
 # 'make clean' deletes object files
-# 'make xclean' deletes object files and executables
+# 'make xclean' deletes object files and executable
+#
+# to use valgrind to check for memory leaks and other malloc/free errors:
+# 'make OPT="-g -O0" test-int-bst
+# 'valgrind test-int-bst'
 #
 
-# OPT = -O
-# CFLAGS = -Wall -pedantic -std=c99 $(OPT)
+OPT = -O
+CFLAGS = -Wall -pedantic -std=c99 $(OPT)
 
-# EXE1 = game-of-life
-# EXE2 = game-of-life-random
-# OBJS1 = game-of-life.o game-of-life-util.o
-# OBJS2 = game-of-life-random.o game-of-life-util.o
+EXE = test-int-bst
+OBJS = test-int-bst.o test-helper.o int-bst.o
 
-# all: $(EXE1) $(EXE2)
+main: $(EXE)
 
-# $(EXE1): $(OBJS1)
-# 	$(CC) -o $(EXE1) $(OBJS1)
+$(EXE): $(OBJS)
+	$(CC) -o $(EXE) $(OBJS)
 
-# $(EXE2): $(OBJS2)
-# 	$(CC) -o $(EXE2) $(OBJS2)
+test-int-bst.o: test-int-bst.c int-bst.h
 
-# game-of-life.o: game-of-life.c game-of-life-util.h
-# game-of-life-random.o: game-of-life-random.c game-of-life-util.h
+test-helper.o: test-helper.c test-helper.h
 
-# game-of-life-util.o: game-of-life-util.h game-of-life-util.c
+int-bst.o: int-bst.c int-bst.h
 
-# .PHONY: clean
-# clean:
-# 	-rm $(OBJS1) $(OBJS2)
+.PHONY: clean
+clean:
+	-rm $(OBJS)
 
-# .PHONY: xclean
-# xclean:
-# 	-rm $(OBJS1) $(OBJS2) $(EXE1) $(EXE2)
+.PHONY: xclean
+xclean:
+	-rm $(OBJS) $(EXE)

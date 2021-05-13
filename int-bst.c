@@ -30,13 +30,13 @@ int_bst_node_t * createNode(int n)
  * returns true if insertion succeeded (including the case where n is already
  * in the tree), false otherwise (e.g., malloc error)
  */
+
 bool int_bst_insert(int_bst_node_t ** t_p, int n){
     int_bst_node_t*parent = NULL;
-    if(*t_p == NULL && parent == NULL){
-        *t_p = createNode(n);
-        parent = *t_p;
+    if (*t_p == NULL && parent == NULL){
+        parent = createNode(n);
         return true;
-    }else if(*t_p == NULL){
+    } else if(*t_p == NULL){
         if(parent->right == *t_p){
             parent->right = createNode(n);   
         }else{
