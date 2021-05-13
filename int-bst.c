@@ -16,8 +16,7 @@
 int_bst_node_t * createNode(int n) 
 {
     int_bst_node_t *localNode = malloc(sizeof(int_bst_node_t));
-    if(localNode != NULL)
-    {
+    if(localNode != NULL){
         localNode->data = n;
         localNode->left = NULL;
         localNode->right = NULL;
@@ -32,25 +31,41 @@ int_bst_node_t * createNode(int n)
  * in the tree), false otherwise (e.g., malloc error)
  */
 bool int_bst_insert(int_bst_node_t ** t_p, int n){
-    if(*t_p == NULL){
-        createNode(n);
+    int_bst_node_t*parent = NULL;
+    if(*t_p == NULL && parent == NULL){
+        *t_p = createNode(n);
+        parent = *t_p;
+        return true;
+    }else if(*t_p == NULL){
+        if(parent->right == *t_p){
+            parent->right = createNode(n);   
+        }else{
+            parent->left = createNode(n);
+        }
         return true;
     }else if((*t_p)->data > n){
-        if((*t_p)-> left != NULL){
-            return int_bst_insert(&((*t_p)->left),n);
-        } else{
-            (*t_p)->left = createNode(n);
-            return true;
-        }
+        parent = *t_p;
+        return int_bst_insert(&((*t_p)->left),n);
     }else if((*t_p)->data < n){
-        if((*t_p)-> right != NULL){
-            return int_bst_insert(&((*t_p)->right),n);
-        }else{
-            (*t_p)->right = createNode(n);
-            return true;
-        }
+        parent = *t_p;
+       return int_bst_insert(&((*t_p)->right),n);
     }else{
         return false;
+    }
+}
+
+void freeNode(int_bst_node_t*pNode){
+    if(pNode != NULL){
+        freeNode(pNode->left);
+        freeNode(pNode->right);
+        free(pNode);
+    }
+}
+
+void freeNodeInTree(tree_t*pTree){
+    if(pTree != NULL){
+        freeNode(pTree ->pRootNode);
+        pTree->pRootNode =NULL;
     }
 }
 
@@ -58,21 +73,17 @@ bool int_bst_insert(int_bst_node_t ** t_p, int n){
  * find n in t
  */
 bool int_bst_find(int_bst_node_t * t, int n){
-    if(t-> data > n){
-        if(t -> left == NULL){
-            return false;
-        }else{
-            return int_bst_find(t -> left,n);
-        }
-    } else if(t-> data < n){
-        if(t->right == NULL){
-            return false;
-        } else{
-            return int_bst_find(t->right,n);
-        }
-    } else if(t-> data == n){
+    if(t == NULL){
+        return false;
+    }
+
+    if(n == t->data){
         return true;
-    }else return false;
+    }else if(n < t->data){
+        return int_bst_find(t->left,n);
+    }else{
+        return int_bst_find(t->right,n);
+    }
 }
 
 /* 
@@ -81,49 +92,65 @@ bool int_bst_find(int_bst_node_t * t, int n){
  * and otherwise do nothing
  */
 void int_bst_remove(int_bst_node_t ** t_p, int n){
-    int_bst_node_t*parent = NULL;
-    while(*t_p != NULL && (*t_p) -> data != n){
-        if((*t_p) -> data > n){
-            parent = (*t_p);
-            *t_p = (*t_p)->left;
-        }else if((*t_p) -> data < n){
-            parent = (*t_p);
-            *t_p = (*t_p)->right;
-        }
+    int_bst_node_t*parent=NULL;
+    int_bst_node_t*node = *t_p;
+    while(node != NULL){
+        if(n < node->data){
+            parent = node;
+            node = node->left;
+        }else if(n > node->data){
+            parent = node;
+            node= node->right;
+        }else break;
     }
-    if((*t_p)-> data == n){
-        if((*t_p)-> right==NULL && (*t_p)->left == NULL){
-            if(parent->data > n){
-                parent->left = NULL;
+    if(node->right == NULL && node->left == NULL){
+        if(parent != NULL){
+            if(parent->left == node){
+                parent ->left = NULL;
             }else{
                 parent->right = NULL;
             }
-        }else if((*t_p)-> right == NULL){
-            if(parent -> data > n){
-                parent -> left = (*t_p) -> left;
-            }else{
-                parent -> right = (*t_p) -> left;
-            }
-        } else if((*t_p)-> left == NULL){
-            if(parent -> data > n){
-                parent -> left = (*t_p) -> right;
-            }else{
-                parent -> right = (*t_p) -> right;
-            }
+            free(node);
         }else{
-            int_bst_node_t*search;
-            search = (*t_p)->right;
-            while(search ->left == NULL){
-                search = search->left;
-            }
-            if(parent->data > n){
-                parent->left = search;
-            }else if(parent->data < n){
-                parent->right = search;
-            }
+            free(node);
+            *t_p = NULL;
+        }
+    }else if(node->left == NULL || node->right == NULL){
+        int_bst_node_t*child;
+        if(node->right == NULL){
+            child = node->left;
+            node->data = child ->data;
+            node->left = child->left;
+            node->right = child->right;
+            free(child);
+        }else{
+            child = node->right;
+            node->data = child->data;
+            node->right = child->right;
+            node->left = child->left;
+            free(child);
         }
     }else{
-        printf("Not found");
+        int_bst_node_t*max;
+        int_bst_node_t*maxparent;
+        max = node->left;
+        maxparent = node;
+        while(max->right != NULL){
+            maxparent = max;
+            max = max->right;
+        }
+        node->data = max->data;
+        if(max->left == NULL){
+            maxparent -> right = NULL;
+            free(max);
+        }else{
+            int_bst_node_t*child2;
+            child2 = max->left;
+            max->data = child2->data;
+            max->right = child2->right;
+            max->left = child2->left;
+            free(child2);
+        }
     }
 }
 
@@ -131,9 +158,12 @@ void int_bst_remove(int_bst_node_t ** t_p, int n){
  * remove all nodes from *t_p and set (*t_p) to NULL
  */
 void int_bst_remove_all(int_bst_node_t ** t_p){
-    (*t_p) ->left = NULL;
-    (*t_p)->right = NULL;
-    *t_p = NULL;
+    if((*t_p) == NULL){
+        return;
+    }
+    int_bst_remove_all(&((*t_p)->left));
+    int_bst_remove_all(&((*t_p)->right));
+    free(*t_p);
 }
 
 /*
@@ -146,29 +176,12 @@ void int_bst_remove_all(int_bst_node_t ** t_p){
  *   one line or each on a separate line or what
  */
 void int_bst_print_elements(int_bst_node_t * t, FILE * f, char * fmt){
-        // fprintf(f,"%d ",t->data);
-        // if(t->right != NULL){
-        //     t = t->right;
-        //     int_bst_print_elements(t,f,fmt);
-        // }
-        // if(t->left != NULL){
-
-        //     fprintf(f,"%d ",t->data);
-        //     fprintf(f,"%d, ",t->data);
-
-        //     t = t-> left;
-        //     int_bst_print_elements(t,f,fmt);
-        // }
-        fprintf(f,"%d ",t->data);
-        if(t->right){
+        fprintf(f,"%d",t->data);
+        if(t->right != NULL){
             t = t->right;
             int_bst_print_elements(t,f,fmt);
         }
-        if(t->left){
-
-            fprintf(f,"%d ",t->data);
-            fprintf(f,"%d, ",t->data);
-
+        if(t->left != NULL){
             t = t-> left;
             int_bst_print_elements(t,f,fmt);
         }
@@ -179,53 +192,44 @@ void int_bst_print_elements(int_bst_node_t * t, FILE * f, char * fmt){
  * (see sample output for one way to do this -- or you may have
  * a better idea)
  */
-parent = NULL;
-int i = 0;
+int noneelemC = 0;
+int newnoneelem = 0;
+int depth = 0;
+int elem = 0;
 void int_bst_print_as_tree(int_bst_node_t * t, FILE * f){
-    if(t == NULL){
-        fprintf(f,".");
-        return;
-    } else if(i != 0){
-       if(t->left != NULL && t->right != NULL){
-           int_bst_node_t*child1 = t -> left;
-           int_bst_node_t*child2 = t -> right;
-           fprintf(f,"%d, %d\n",(child1 ->data), (child2->data));
-        //    parent = t;
-           int_bst_print_as_tree(child1, f);
-           int_bst_print_as_tree(child2, f);
-        }else if(t->right != NULL){
-            int_bst_node_t*child3 = t -> right;
-            fprintf(f,"%d\n",(child3->data));
-            int_bst_print_as_tree(child3, f);
-            // parent = t;
-        }else if(t->left != NULL){
-            int_bst_node_t*child4 = t -> left;
-            fprintf(f,"%d\n",(child4->data));
-            int_bst_print_as_tree(child4, f);
-            // parent = t;
-        }else return;
+    int ideal;
+    if(depth == 0){
+        ideal = 1;
     }else{
-        // parent = t;
-        fprintf(f,"%d ",t->data);
-        i = i + 1;
-        int_bst_print_as_tree(t,f);
+        ideal = 1;
+        for(int a = 0; a < depth; a = a + 1){
+            ideal = ideal * 2;
+        }
     }
+    if(t == NULL && elem+noneelemC + newnoneelem == ideal - 1){
+        fprintf(f,"\n");
+        newnoneelem = newnoneelem + 1;
+    }else if(t == NULL){
+        newnoneelem = newnoneelem + 1;
+    }else if(elem+noneelemC + newnoneelem == ideal - 1){
+        fprintf(f,"%d\n",t->data);
+        elem = elem + 1;
+    }else if(t != NULL){
+        fprintf(f,"%d ", t->data);
+        elem = elem  + 1;
+    }
+    if(ideal == noneelemC + newnoneelem){
+        return ;
+    }
+    if(elem+noneelemC + newnoneelem == ideal){
+        depth = depth + 1;
+        noneelemC = (noneelemC + newnoneelem)*2;
+        newnoneelem = 0;
+    }
+    int_bst_print_as_tree(t->left,f);
+    int_bst_print_as_tree(t->right,f);
 }
 
 
 
-/*
-int_bst_print_as_tree(int_bst_node_t * t, FILE * f){
-   if (t == NULL)
-            fprintf(f,".");
 
-   
-      return;
-   space += COUNT;
-   printTree(root->right, space);
-   for (int i = COUNT; i < space; i++)
-      cout<<"\t";
-   cout<<root->data<<"\n";
-   printTree(root->left, space);
-}
-*/

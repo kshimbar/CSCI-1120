@@ -32,6 +32,10 @@ typedef struct int_bst_node {
 	struct int_bst_node * right;
 } int_bst_node_t;
 
+typedef struct tree{
+    int_bst_node_t* pRootNode;
+}tree_t;
+
 /*
  * functions
  *
