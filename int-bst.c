@@ -62,10 +62,11 @@ void freeNode(int_bst_node_t*pNode){
     }
 }
 
-void freeNodeInTree(tree_t*pTree){
-    if(pTree != NULL){
-        freeNode(pTree ->pRootNode);
-        pTree->pRootNode =NULL;
+void freeNodeInTree(int_bst_node_t*pNode){
+    if(pNode != NULL){
+        freeNode(pNode -> right);
+        freeNode(pNode->left);
+        free(pNode);
     }
 }
 

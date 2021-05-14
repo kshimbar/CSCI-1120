@@ -1,6 +1,6 @@
 /*******************************************************************************
- 
-
+ *
+ * simple implementation of binary search tree of ints
  *
  * "tree" is represented by pointer to root node
  */
@@ -31,10 +31,6 @@ typedef struct int_bst_node {
 	struct int_bst_node * left;
 	struct int_bst_node * right;
 } int_bst_node_t;
-
-typedef struct tree{
-    int_bst_node_t* pRootNode;
-}tree_t;
 
 /*
  * functions
@@ -88,3 +84,4 @@ void int_bst_print_elements(int_bst_node_t * t, FILE * f, char * fmt);
 void int_bst_print_as_tree(int_bst_node_t * t, FILE * f);
 
 #endif /* end of ifndef INT_BST_H */
+
