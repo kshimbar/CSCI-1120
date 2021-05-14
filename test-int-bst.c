@@ -17,6 +17,7 @@
 /* convenience functions to print tree */
 static void print_tree_elements(int_bst_node_t * t);
 static void print_tree_as_tree(int_bst_node_t * t);
+static void print_test_data(int data[], size_t sz);
 
 /* functions to test BST functions verbosely */
 static void test_insert(int_bst_node_t ** t_p, int n);
